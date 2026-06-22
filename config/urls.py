@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from kelimeler import views
+from kelimeler import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +25,7 @@ urlpatterns = [
     path('liste/<int:liste_id>/', views.liste_detay, name='liste_detay'),
     path('durum-degistir/<int:kelime_id>/', views.durum_degistir, name='durum_degistir'),
     
+    path('api/listeler/', views.listeler_api, name='listeler_api'),
+    path('api/kelimeler/<int:liste_id>/', views.kelimeler_api, name='kelimeler_api'),
+    path('api/kelime-guncelle/<int:pk>/', views.kelime_guncelle, name='kelime_guncelle'),
 ]
