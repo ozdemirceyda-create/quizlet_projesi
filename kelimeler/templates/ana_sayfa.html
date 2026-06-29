@@ -1,35 +1,48 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>Quizlet Uygulamam</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <div class="container mt-5">
-        <h1 class="text-center mb-5">Benim Kelime Listelerim</h1>
-        
-        <div class="row">
-            {% for liste in listeler %}
-            <div class="col-md-4">
-                
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body text-center p-4">
-                        <h4 class="card-title mb-3">{{ liste.name }}</h4>
-                        <a href="{% url 'liste_detay' liste.id %}" class="btn btn-primary w-100">Çalışmaya Başla</a>
-                    </div>
-                </div>
+{% block title %}Ana Sayfa - Quizlet Dashboard{% endblock %}
 
+{% block content %}
+<div class="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
+    <h2 class="fw-bold text-dark mb-0">Genel Bakış</h2>
+    <button class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Hızlı Kelime Ekle</button>
+</div>
+
+<!-- İstatistik Kartları -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-3 bg-primary text-white p-3">
+            <div class="card-body">
+                <h6 class="text-uppercase opacity-75">Toplam Liste Sayısı</h6>
+                <h1 class="display-5 fw-bold mb-0">12</h1>
             </div>
-            {% empty %}
-            <p class="text-center">Henüz hiç liste oluşturmadın.</p>
-            {% endfor %}
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-3 bg-success text-white p-3">
+            <div class="card-body">
+                <h6 class="text-uppercase opacity-75">Öğrenilen Kelimeler</h6>
+                <h1 class="display-5 fw-bold mb-0">148</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-3 bg-warning text-dark p-3">
+            <div class="card-body">
+                <h6 class="text-uppercase opacity-75">Tekrar Bekleyenler</h6>
+                <h1 class="display-5 fw-bold mb-0">34</h1>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<!-- Tablo Alanı -->
+<div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history me-2"></i>Son Çalışılan Listeler</h5>
+    </div>
+    <div class="card-body p-4 text-center text-muted">
+        <p class="mb-0">Veritabanı bağlantısı yapıldığında Django döngüsü (for liste in listeler) buraya gelecek.</p>
+    </div>
+</div>
+{% endblock %}
