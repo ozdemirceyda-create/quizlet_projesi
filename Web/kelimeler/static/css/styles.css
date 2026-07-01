@@ -11,6 +11,12 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
+  --color-background: #F9F7F7;
+    --color-primary: #3F72AF;
+    --color-accent: #112D4E;
+    --color-surface: #DBE2EF;
+    --color-text-dark: #1A1A1A;
+    --color-text-light: #FFFFFF;
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -102,6 +108,8 @@ body {
   background-color: var(--bs-body-bg);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  background-color: var(--color-background);
+    color: var(--color-text-dark);
 }
 
 hr {
@@ -11043,4 +11051,12 @@ html {
 
 .copyright {
   background-color: #1a252f;
+}
+.kelime-karti {
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-primary);
+}
+.kaydet-butonu {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
 }

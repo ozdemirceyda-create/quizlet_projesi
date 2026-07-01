@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'app_colors.dart'; // Renklerimizi buradan çekiyoruz
 
 void main() {
   runApp(const QuizletApp());
@@ -15,12 +16,11 @@ class QuizletApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Quizlet Projesi',
-      // Webde fareyle kaydırmak için
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
       ),
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primaryColor: AppColors.primary,
       ),
       home: const ListelerEkran(),
     );
@@ -64,8 +64,8 @@ class _ListelerEkranState extends State<ListelerEkran> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kelime Listelerim', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.indigo,
+        title: const Text('Kelime Listelerim', style: TextStyle(color: AppColors.textLight)),
+        backgroundColor: AppColors.primary,
       ),
       body: yukleniyor
           ? const Center(child: CircularProgressIndicator())
@@ -78,7 +78,7 @@ class _ListelerEkranState extends State<ListelerEkran> {
                     return Card(
                       margin: const EdgeInsets.all(8.0),
                       child: ListTile(
-                        leading: const Icon(Icons.folder, color: Colors.indigo),
+                        leading: const Icon(Icons.folder, color: AppColors.primary),
                         title: Text(liste['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text('Liste ID: ${liste['id']}'),
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -148,79 +148,54 @@ class _KelimeKartlariEkranState extends State<KelimeKartlariEkran> {
         headers: {"Content-Type": "application/json"},
         body: json.encode({"is_learned": durum}),
       );
-
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(durum ? 'Kelime öğrenildi' : 'Tekrar edilecek'),
-          duration: const Duration(milliseconds: 600),
-        ),
+        SnackBar(content: Text(durum ? 'Kelime öğrenildi' : 'Tekrar edilecek')),
       );
-
       if (aktifIndex < kelimeler.length - 1) {
         _sayfaKontrolcusu.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
       }
-    } catch (e) {
-      print("Post hatası: $e");
-    }
+    } catch (e) { print("Post hatası: $e"); }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.listeAdi, style: const TextStyle(color: Colors.white)),
-        backgroundColor: Colors.indigo,
-        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(widget.listeAdi, style: const TextStyle(color: AppColors.textLight)),
+        backgroundColor: AppColors.primary,
+        iconTheme: const IconThemeData(color: AppColors.textLight),
       ),
       body: yukleniyor
           ? const Center(child: CircularProgressIndicator())
           : kelimeler.isEmpty
-              ? const Center(child: Text('Bu listede kelime yok.'))
+              ? const Center(child: Text('Liste boş'))
               : Column(
                   children: [
                     const SizedBox(height: 20),
                     Text('${aktifIndex + 1} / ${kelimeler.length}', style: const TextStyle(fontSize: 18)),
-                    
                     Expanded(
                       child: PageView.builder(
                         controller: _sayfaKontrolcusu,
                         itemCount: kelimeler.length,
-                        onPageChanged: (index) {
-                          setState(() {
-                            aktifIndex = index;
-                            ceviriyiGoster = false;
-                          });
-                        },
+                        onPageChanged: (index) => setState(() { aktifIndex = index; ceviriyiGoster = false; }),
                         itemBuilder: (context, index) {
                           final kelime = kelimeler[index];
                           return GestureDetector(
-                            onTap: () {
-                              setState(() { ceviriyiGoster = !ceviriyiGoster; });
-                            },
+                            onTap: () => setState(() { ceviriyiGoster = !ceviriyiGoster; }),
                             child: Container(
                               margin: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: ceviriyiGoster ? Colors.green[50] : Colors.white,
+                                color: ceviriyiGoster ? AppColors.surface : AppColors.textLight,
                                 borderRadius: BorderRadius.circular(15),
-                                boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5)],
+                                border: Border.all(color: AppColors.primary),
                               ),
                               child: Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      ceviriyiGoster ? kelime['tr'] : kelime['eng'],
-                                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(ceviriyiGoster ? "Türkçesi" : "İngilizcesi", style: const TextStyle(color: Colors.grey)),
-                                    if (kelime['example'] != null) ...[
-                                      const SizedBox(height: 20),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                                        child: Text('"${kelime['example']}"', style: const TextStyle(fontStyle: FontStyle.italic)),
-                                      )
-                                    ]
+                                    Text(ceviriyiGoster ? kelime['tr'] : kelime['eng'],
+                                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                                    Text(ceviriyiGoster ? "Türkçesi" : "İngilizcesi", style: const TextStyle(color: AppColors.accent)),
                                   ],
                                 ),
                               ),
@@ -229,19 +204,18 @@ class _KelimeKartlariEkranState extends State<KelimeKartlariEkran> {
                         },
                       ),
                     ),
-                    
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red[400]),
+                          style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent),
                           onPressed: () => durumGuncelle(kelimeler[aktifIndex]['id'], false),
-                          child: const Text("Bilemedim", style: TextStyle(color: Colors.white)),
+                          child: const Text("Bilemedim", style: TextStyle(color: AppColors.textLight)),
                         ),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green[500]),
+                          style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
                           onPressed: () => durumGuncelle(kelimeler[aktifIndex]['id'], true),
-                          child: const Text("Öğrendim", style: TextStyle(color: Colors.white)),
+                          child: const Text("Öğrendim", style: TextStyle(color: AppColors.textLight)),
                         ),
                       ],
                     ),
